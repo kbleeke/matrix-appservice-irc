@@ -548,7 +548,7 @@ export class IrcServer {
         return renderTemplate(this.config.matrixClients.userTemplate, {
             server: this.domain,
             nick,
-        }).substring(1); // the first character is guaranteed by config schema to be '@'
+        }).substring(1).toLowerCase(); // the first character is guaranteed by config schema to be '@'
     }
 
     public claimsUserId(userId: string): boolean {
@@ -586,9 +586,7 @@ export class IrcServer {
     }
 
     public getUserIdFromNick(nick: string): string {
-        const template = this.config.matrixClients.userTemplate;
-        return template.replace(/\$NICK/g, nick).replace(/\$SERVER/g, this.domain) +
-            ":" + this.homeserverDomain;
+        return "@" + this.getUserLocalpart(nick) + ":" + this.homeserverDomain;
     }
 
     public getDisplayNameFromNick(nick: string): string {
